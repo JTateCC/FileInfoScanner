@@ -43,7 +43,7 @@
             // 
             // browseFileBtn
             // 
-            this.browseFileBtn.Location = new System.Drawing.Point(781, 71);
+            this.browseFileBtn.Location = new System.Drawing.Point(982, 82);
             this.browseFileBtn.Name = "browseFileBtn";
             this.browseFileBtn.Size = new System.Drawing.Size(199, 59);
             this.browseFileBtn.TabIndex = 0;
@@ -55,56 +55,58 @@
             // 
             this.outputListBox.FormattingEnabled = true;
             this.outputListBox.ItemHeight = 20;
-            this.outputListBox.Location = new System.Drawing.Point(207, 689);
+            this.outputListBox.Location = new System.Drawing.Point(42, 675);
             this.outputListBox.MultiColumn = true;
             this.outputListBox.Name = "outputListBox";
             this.outputListBox.SelectionMode = System.Windows.Forms.SelectionMode.None;
-            this.outputListBox.Size = new System.Drawing.Size(1044, 444);
+            this.outputListBox.Size = new System.Drawing.Size(1737, 444);
             this.outputListBox.TabIndex = 4;
             // 
             // fileListBox
             // 
             this.fileListBox.FormattingEnabled = true;
-            this.fileListBox.Location = new System.Drawing.Point(207, 71);
+            this.fileListBox.Location = new System.Drawing.Point(42, 82);
             this.fileListBox.MultiColumn = true;
             this.fileListBox.Name = "fileListBox";
-            this.fileListBox.Size = new System.Drawing.Size(519, 464);
+            this.fileListBox.Size = new System.Drawing.Size(839, 464);
             this.fileListBox.TabIndex = 5;
+            this.fileListBox.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.fileListBox_ItemCheck);
             // 
             // removeFilesBtn
             // 
-            this.removeFilesBtn.Location = new System.Drawing.Point(781, 170);
+            this.removeFilesBtn.Location = new System.Drawing.Point(982, 193);
             this.removeFilesBtn.Name = "removeFilesBtn";
             this.removeFilesBtn.Size = new System.Drawing.Size(199, 59);
             this.removeFilesBtn.TabIndex = 6;
             this.removeFilesBtn.Text = "Remove Selected";
             this.removeFilesBtn.UseVisualStyleBackColor = true;
-            this.removeFilesBtn.Click += new System.EventHandler(this.button1_Click);
+            this.removeFilesBtn.Click += new System.EventHandler(this.removeFilesBtn_Click);
             // 
             // selectAllBtn
             // 
-            this.selectAllBtn.Location = new System.Drawing.Point(781, 378);
+            this.selectAllBtn.Location = new System.Drawing.Point(982, 391);
             this.selectAllBtn.Name = "selectAllBtn";
             this.selectAllBtn.Size = new System.Drawing.Size(199, 59);
             this.selectAllBtn.TabIndex = 7;
             this.selectAllBtn.Text = "Select All";
             this.selectAllBtn.UseVisualStyleBackColor = true;
-            this.selectAllBtn.Click += new System.EventHandler(this.button1_Click_1);
+            this.selectAllBtn.Click += new System.EventHandler(this.selectAllBtn_Click);
             // 
             // clearSelectBtn
             // 
-            this.clearSelectBtn.Location = new System.Drawing.Point(781, 476);
+            this.clearSelectBtn.Location = new System.Drawing.Point(992, 487);
             this.clearSelectBtn.Name = "clearSelectBtn";
             this.clearSelectBtn.Size = new System.Drawing.Size(199, 59);
             this.clearSelectBtn.TabIndex = 8;
             this.clearSelectBtn.Text = "Clear Selection";
             this.clearSelectBtn.UseVisualStyleBackColor = true;
+            this.clearSelectBtn.Click += new System.EventHandler(this.clearSelectBtn_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1345, 1450);
+            this.ClientSize = new System.Drawing.Size(1850, 1450);
             this.Controls.Add(this.clearSelectBtn);
             this.Controls.Add(this.selectAllBtn);
             this.Controls.Add(this.removeFilesBtn);
@@ -113,6 +115,7 @@
             this.Controls.Add(this.browseFileBtn);
             this.Name = "Form1";
             this.Text = "Form1";
+            this.Load += new System.EventHandler(this.Form1_Load);
             this.ResumeLayout(false);
 
         }

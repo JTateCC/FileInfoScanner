@@ -39,22 +39,22 @@ namespace FileInfoScanner
         private bool DigitalSignatureExists(byte[] digitalSignature)
         {
             foreach (var item in fileList)
-                {
+            {
                 bool match = true;
                 for (int i = 0; i < digitalSignature.Length; i++)
+                {
+                    if (item.digitalSignature[i] != digitalSignature[i]) // improves performance by breaking if any part of the signature doesnt match.
                     {
-                        if (item.digitalSignature[i] != digitalSignature[i]) // improves performance by breaking if any part of the signature doesnt match.
-                        {
-                            match = false;
-                            break;
-                        }
+                        match = false;
+                        break;
                     }
+                }
                 if (match)
                     return true;
-                }
-        return false;
+            }
+            return false;
         }
-       
+
 
         // Opens File Dialog and allows user to pick file, and filter by extension.
         private void browseFileBtn_Click(object sender, EventArgs e)
@@ -75,116 +75,141 @@ namespace FileInfoScanner
                 {
                     // Add selected files to the ListBox
                     foreach (string selectedFile in openFileDialog.FileNames)
-                    {   
-                      
-    
-                            byte[] digitalSignature = GenerateDigitalSignature(selectedFile);
-                            if (!DigitalSignatureExists(digitalSignature))
-                            {
+                    {
 
-                                FileWithID newFile = new FileWithID(selectedFile, digitalSignature);
-                                fileList.Add(newFile);
-                                fileListBox.Items.Add(newFile);
-                            } else
-                            {
-                                DialogResult err;
-                                err = MessageBox.Show("Some Duplicate Files Not Added");
-                            }
+
+                        byte[] digitalSignature = GenerateDigitalSignature(selectedFile);
+                        if (!DigitalSignatureExists(digitalSignature))
+                        {
+
+                            FileWithID newFile = new FileWithID(selectedFile, digitalSignature);
+                            fileList.Add(newFile);
+                            fileListBox.Items.Add(newFile);
+                        }
+                        else
+                        {
+                            DialogResult err;
+                            err = MessageBox.Show("Some Duplicate Files Not Added");
+                        }
                     }
                 }
             }
 
 
         }
-        // allows user to directly enter the path into the text entry and add to the file lit box.
-        private void addFileBtn_Click(object sender, EventArgs e)
+
+
+
+        // when checked the output list populates data
+        private void fileListBox_ItemCheck(object sender, ItemCheckEventArgs e)
         {
-                if (File.Exists(filePathTb.Text))
-                {
-                    byte[] digitalSignature = GenerateDigitalSignature(filePathTb.Text);
-                    if (!DigitalSignatureExists(digitalSignature))
-                    {
-                        FileWithID newFile = new FileWithID(filePathTb.Text, digitalSignature);
-                        fileList.Add(newFile);
-                        fileListBox.Items.Add(newFile);
-                    }
-                    else
-                    {
-                        DialogResult err;
-                        err = MessageBox.Show("Duplicate File Not Added");
-                    }
-                }
-                else
-                {
-                    DialogResult err;
-                    err = MessageBox.Show("No File Entered or Specified File Does Not Exist");
-                }
+            if (e.NewValue == CheckState.Checked)
+            {
+                FileWithID checkedItem = fileList[e.Index];
+                outputListBox.Items.Add(checkedItem.formatOutputString());
+            }
+            else if (e.NewValue == CheckState.Unchecked)
+            {
+                FileWithID uncheckedItem = fileList[e.Index];
+                outputListBox.Items.Remove(uncheckedItem.formatOutputString());
+            }
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        // remove any selected files from the listbox and list
+        private void removeFilesBtn_Click(object sender, EventArgs e)
         {
 
         }
 
-        private void button1_Click_1(object sender, EventArgs e)
+        private void selectAllBtn_Click(object sender, EventArgs e)
         {
 
         }
+
+        private void clearSelectBtn_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            string header = $"{ "ID",-50} | { "Name",-150} | { "Size (bytes)",-30} | { "Date Created",-30} | { "Last Modified",-30}";
+            outputListBox.Items.Insert(0, header);
+        }
     }
-}
 
-// keep an oop approach and havin a custom class for files with id;s
-public class FileWithID
-{
-    public string ID { get; set; }
-    public string filePath { get; set; }
-    public byte[] digitalSignature { get; set; } // digital sig is captured from the path and then stored to avoid duplicates.
-
-    // pertinent file data for capture and display.
-    public long fileSize { get; set; }
-    public DateTime creationDate { get; set; }
-    public DateTime modifiedDate { get; set; }
-
-    // public string author { get; set; } TODO: set this method up if time available.
-
-
-    public FileWithID(string filepath, byte [] digitialsignature)
+    // keep an oop approach and havin a custom class for files with id;s
+    public class FileWithID
     {
-        ID = GenerateUniqueId();
-        filePath = filepath;
-        digitalSignature = digitialsignature;
-        getFileProperties();
+        public string ID { get; set; }
+        public string filePath { get; set; }
+        public byte[] digitalSignature { get; set; } // digital sig is captured from the path and then stored to avoid duplicates.
+
+        // pertinent file data for capture and display.
+
+        public string fileName { get; set; }
+        public long fileSize { get; set; }
+        public DateTime creationDate { get; set; }
+        public DateTime modifiedDate { get; set; }
+
+        // public string author { get; set; } TODO: set this method up if time available.
+
+
+        public FileWithID(string filepath, byte[] digitialsignature)
+        {
+            ID = generateUniqueId();
+            filePath = filepath;
+            digitalSignature = digitialsignature;
+            getFileProperties();
+        }
+
+        public override string ToString()
+        {
+            return $"{filePath} (ID: {ID})";
+        }
+
+
+        // researching best way to display the output in seperate clumns
+        public string formatOutputString()
+        {
+            string fnameString = fileName;
+            if (fileName.Length > 50)
+            {
+                fnameString = fileName.Substring(0, 50) + "...";
+            }
+
+        
+          return $"{ID,-50} | {fnameString,-150} | {fileSize,-30} | {creationDate,-30} | {modifiedDate,-30}";
+        }
+
+        // Generate a unique ID using te Guid module.
+        private string generateUniqueId()
+        {
+            return Guid.NewGuid().ToString();
+        }
+
+        private void getFileProperties() // master function to get all properties including author which is more complex
+        {
+            FileInfo fileInfo = new FileInfo(filePath);
+
+            // Capture file name
+            fileName = fileInfo.Name;
+
+            // Capture file size
+            fileSize = fileInfo.Length;
+
+            // Capture creation date
+            creationDate = fileInfo.CreationTime;
+
+            // Capture modified date
+            modifiedDate = fileInfo.LastWriteTime;
+
+            // TODO Capture author (if available)
+        }
+
+
+
+
+
     }
-
-    public override string ToString()
-    {
-        return $"{filePath} (ID: {ID})";
-    }
-
-    // Generate a unique ID using te Guid module.
-    private string GenerateUniqueId()
-    {   
-        return Guid.NewGuid().ToString();
-    }
-
-    private void getFileProperties() // master function to get all properties including author which is more complex
-    {
-        FileInfo fileInfo = new FileInfo(filePath);
-
-        // Capture file size
-        fileSize = fileInfo.Length;
-
-        // Capture creation date
-        creationDate = fileInfo.CreationTime;
-
-        // Capture modified date
-        modifiedDate = fileInfo.LastWriteTime;
-
-        // TODO Capture author (if available)
-    }
-
-
-
-
-
 }
