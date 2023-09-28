@@ -1,0 +1,24 @@
+﻿Exercise #2: Coding Project
+The following is the criteria for the coding exercise. Please let us know if there are any questions.
+
+•	Description
+o	Create a Windows form application that will scan select path(s) for file information.
+•	Toolset Requirements
+o	Generate a unique id for each file
+o	Capture duplicate content of data based on digital signature
+o	Provide user feedback during runtime
+o	Provide an output of data in a readable format
+o	Allow for file extension filtering
+o	Capture any data that you feel is pertinent to the file(s) scanned
+•	Core Application Requirements
+o	Windows Form application
+o	Written on .NET 4.8 (not .NET Core)
+o	Written in C#
+o	Track all time spent on the project.
+•	Deliverable
+o	Compiled solution
+o	ZIP file of completed project
+o	Total time spent on project
+o	Uploaded to the following link
+	https://trimech.sharefile.com/r-radfcf28be2cb433cb6e5ee7dd4001ed9
+o	Please upload the complete project by October 2nd and notify me of upload
