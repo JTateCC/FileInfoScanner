@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography; // learning abut this new module.
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -14,17 +15,47 @@ namespace FileInfoScanner
     public partial class Form1 : Form
     {
 
-        private List<FileWithID> fileList = new List<FileWithID>();
+        private List<FileWithID> fileList = new List<FileWithID>();// useful to keep this list rather than working with the listbox.
         public Form1()
         {
             InitializeComponent();
         }
 
-
-        private void openFileDialog1_FileOk(object sender, CancelEventArgs e)
+        // moved outside of the class as better to check if a duplicate exists before creating the new object.
+        private byte[] GenerateDigitalSignature(string filepath) // researched this pattern on generating the signature. from the path
         {
 
+            using (var sha256 = SHA256.Create())
+            {
+                using (var stream = File.OpenRead(filepath))
+                {
+                    // Compute the digital signature of the file
+                    return sha256.ComputeHash(stream);
+                }
+            }
         }
+
+        // this method takes in a digita sig and compares it to digital sigs of other fileItems in teh lit.
+        private bool DigitalSignatureExists(byte[] digitalSignature)
+        {
+            foreach (var item in fileList)
+                {
+                bool match = true;
+                for (int i = 0; i < digitalSignature.Length; i++)
+                    {
+                        if (item.digitalSignature[i] != digitalSignature[i]) // improves performance by brekaing if any part of the signature doesnt matc.
+                        {
+                            match = false;
+                            break;
+                        }
+                    }
+                if (match)
+                    return true;
+                }
+        return false;
+        }
+       
+
         // Opens File Dialog and allows user to pick file, and filter by extension.
         private void browseFileBtn_Click(object sender, EventArgs e)
         {
@@ -43,10 +74,21 @@ namespace FileInfoScanner
                 {
                     // Add selected files to the ListBox
                     foreach (string selectedFile in openFileDialog.FileNames)
-                    {
-                        FileWithID newFile = new FileWithID(selectedFile);
-                        fileList.Add(newFile);
-                        fileListBox.Items.Add(newFile);
+                    {   
+                      
+    
+                            byte[] digitalSignature = GenerateDigitalSignature(selectedFile);
+                            if (!DigitalSignatureExists(digitalSignature))
+                            {
+
+                                FileWithID newFile = new FileWithID(selectedFile, digitalSignature);
+                                fileList.Add(newFile);
+                                fileListBox.Items.Add(newFile);
+                            } else
+                            {
+                                DialogResult err;
+                                err = MessageBox.Show("Some Duplicate Files Not Added");
+                            }
                     }
                 }
             }
@@ -56,17 +98,26 @@ namespace FileInfoScanner
         // allows user to directly enter the path into the text entry and add to the file lit box.
         private void addFileBtn_Click(object sender, EventArgs e)
         {
-            if (File.Exists(filePathTb.Text))
-            {
-                FileWithID newFile = new FileWithID(filePathTb.Text);
-                fileList.Add(newFile);
-                fileListBox.Items.Add(newFile);
-            }
-            else
-            {
-                DialogResult err;
-                err = MessageBox.Show("No File Entered or Specified File Does Not Exist");
-            }
+                if (File.Exists(filePathTb.Text))
+                {
+                    byte[] digitalSignature = GenerateDigitalSignature(filePathTb.Text);
+                    if (!DigitalSignatureExists(digitalSignature))
+                    {
+                        FileWithID newFile = new FileWithID(filePathTb.Text, digitalSignature);
+                        fileList.Add(newFile);
+                        fileListBox.Items.Add(newFile);
+                    }
+                    else
+                    {
+                        DialogResult err;
+                        err = MessageBox.Show("Duplicate File Not Added");
+                    }
+                }
+                else
+                {
+                    DialogResult err;
+                    err = MessageBox.Show("No File Entered or Specified File Does Not Exist");
+                }
         }
     }
 }
@@ -76,12 +127,13 @@ public class FileWithID
 {
     public string ID { get; set; }
     public string filePath { get; set; }
+    public byte[] digitalSignature { get; set; } // digital sig is captured from the path and then stored to avoid duplicates.
 
-
-    public FileWithID(string filepath)
+    public FileWithID(string filepath, byte [] digitialsignature)
     {
         ID = GenerateUniqueId();
         filePath = filepath;
+        digitalSignature = digitialsignature;
     }
 
     public override string ToString()
@@ -94,4 +146,6 @@ public class FileWithID
     {   
         return Guid.NewGuid().ToString();
     }
+
+
 }
