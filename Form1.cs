@@ -35,7 +35,7 @@ namespace FileInfoScanner
             }
         }
 
-        // this method takes in a digita sig and compares it to digital sigs of other fileItems in teh lit.
+        // this method takes in a digita sig and compares it to digital sigs of other fileItems in the list.
         private bool DigitalSignatureExists(byte[] digitalSignature)
         {
             foreach (var item in fileList)
@@ -43,7 +43,7 @@ namespace FileInfoScanner
                 bool match = true;
                 for (int i = 0; i < digitalSignature.Length; i++)
                     {
-                        if (item.digitalSignature[i] != digitalSignature[i]) // improves performance by brekaing if any part of the signature doesnt matc.
+                        if (item.digitalSignature[i] != digitalSignature[i]) // improves performance by breaking if any part of the signature doesnt match.
                         {
                             match = false;
                             break;
@@ -61,7 +61,8 @@ namespace FileInfoScanner
         {
             OpenFileDialog openFileDialog = new OpenFileDialog(); // new file dialog object
             openFileDialog.Title = "Select a File";
-            openFileDialog.Filter = "All Files (*.*)|*.*";  // allowing for extension filtering
+            openFileDialog.Filter = "All Files (*.*)|*.*";
+            openFileDialog.Filter += "|SolidWorks Files|*.SLDPRT;*.SLDASM;*.SLDDRW";// allowing for extension filtering
             openFileDialog.CheckFileExists = true;
             openFileDialog.CheckPathExists = true;
             openFileDialog.Multiselect = true; // convenient to allow multiple file selection
@@ -119,6 +120,16 @@ namespace FileInfoScanner
                     err = MessageBox.Show("No File Entered or Specified File Does Not Exist");
                 }
         }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button1_Click_1(object sender, EventArgs e)
+        {
+
+        }
     }
 }
 
@@ -129,11 +140,20 @@ public class FileWithID
     public string filePath { get; set; }
     public byte[] digitalSignature { get; set; } // digital sig is captured from the path and then stored to avoid duplicates.
 
+    // pertinent file data for capture and display.
+    public long fileSize { get; set; }
+    public DateTime creationDate { get; set; }
+    public DateTime modifiedDate { get; set; }
+
+    // public string author { get; set; } TODO: set this method up if time available.
+
+
     public FileWithID(string filepath, byte [] digitialsignature)
     {
         ID = GenerateUniqueId();
         filePath = filepath;
         digitalSignature = digitialsignature;
+        getFileProperties();
     }
 
     public override string ToString()
@@ -146,6 +166,25 @@ public class FileWithID
     {   
         return Guid.NewGuid().ToString();
     }
+
+    private void getFileProperties() // master function to get all properties including author which is more complex
+    {
+        FileInfo fileInfo = new FileInfo(filePath);
+
+        // Capture file size
+        fileSize = fileInfo.Length;
+
+        // Capture creation date
+        creationDate = fileInfo.CreationTime;
+
+        // Capture modified date
+        modifiedDate = fileInfo.LastWriteTime;
+
+        // TODO Capture author (if available)
+    }
+
+
+
 
 
 }

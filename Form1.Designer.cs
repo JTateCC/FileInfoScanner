@@ -30,9 +30,11 @@
         {
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.browseFileBtn = new System.Windows.Forms.Button();
-            this.fileListBox = new System.Windows.Forms.ListBox();
-            this.addFileBtn = new System.Windows.Forms.Button();
-            this.filePathTb = new System.Windows.Forms.TextBox();
+            this.outputListBox = new System.Windows.Forms.ListBox();
+            this.fileListBox = new System.Windows.Forms.CheckedListBox();
+            this.removeFilesBtn = new System.Windows.Forms.Button();
+            this.selectAllBtn = new System.Windows.Forms.Button();
+            this.clearSelectBtn = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // openFileDialog1
@@ -41,56 +43,77 @@
             // 
             // browseFileBtn
             // 
-            this.browseFileBtn.Location = new System.Drawing.Point(660, 586);
+            this.browseFileBtn.Location = new System.Drawing.Point(781, 71);
             this.browseFileBtn.Name = "browseFileBtn";
-            this.browseFileBtn.Size = new System.Drawing.Size(59, 59);
+            this.browseFileBtn.Size = new System.Drawing.Size(199, 59);
             this.browseFileBtn.TabIndex = 0;
-            this.browseFileBtn.Text = "...";
+            this.browseFileBtn.Text = "Add File(s)";
             this.browseFileBtn.UseVisualStyleBackColor = true;
             this.browseFileBtn.Click += new System.EventHandler(this.browseFileBtn_Click);
+            // 
+            // outputListBox
+            // 
+            this.outputListBox.FormattingEnabled = true;
+            this.outputListBox.ItemHeight = 20;
+            this.outputListBox.Location = new System.Drawing.Point(207, 689);
+            this.outputListBox.MultiColumn = true;
+            this.outputListBox.Name = "outputListBox";
+            this.outputListBox.SelectionMode = System.Windows.Forms.SelectionMode.None;
+            this.outputListBox.Size = new System.Drawing.Size(1044, 444);
+            this.outputListBox.TabIndex = 4;
             // 
             // fileListBox
             // 
             this.fileListBox.FormattingEnabled = true;
-            this.fileListBox.ItemHeight = 20;
-            this.fileListBox.Location = new System.Drawing.Point(207, 116);
+            this.fileListBox.Location = new System.Drawing.Point(207, 71);
+            this.fileListBox.MultiColumn = true;
             this.fileListBox.Name = "fileListBox";
-            this.fileListBox.SelectionMode = System.Windows.Forms.SelectionMode.None;
-            this.fileListBox.Size = new System.Drawing.Size(512, 444);
-            this.fileListBox.TabIndex = 1;
+            this.fileListBox.Size = new System.Drawing.Size(519, 464);
+            this.fileListBox.TabIndex = 5;
             // 
-            // addFileBtn
+            // removeFilesBtn
             // 
-            this.addFileBtn.Location = new System.Drawing.Point(564, 586);
-            this.addFileBtn.Name = "addFileBtn";
-            this.addFileBtn.Size = new System.Drawing.Size(58, 59);
-            this.addFileBtn.TabIndex = 2;
-            this.addFileBtn.Text = "+";
-            this.addFileBtn.UseVisualStyleBackColor = true;
-            this.addFileBtn.Click += new System.EventHandler(this.addFileBtn_Click);
+            this.removeFilesBtn.Location = new System.Drawing.Point(781, 170);
+            this.removeFilesBtn.Name = "removeFilesBtn";
+            this.removeFilesBtn.Size = new System.Drawing.Size(199, 59);
+            this.removeFilesBtn.TabIndex = 6;
+            this.removeFilesBtn.Text = "Remove Selected";
+            this.removeFilesBtn.UseVisualStyleBackColor = true;
+            this.removeFilesBtn.Click += new System.EventHandler(this.button1_Click);
             // 
-            // filePathTb
+            // selectAllBtn
             // 
-            this.filePathTb.Location = new System.Drawing.Point(207, 586);
-            this.filePathTb.MinimumSize = new System.Drawing.Size(0, 2);
-            this.filePathTb.Multiline = true;
-            this.filePathTb.Name = "filePathTb";
-            this.filePathTb.Size = new System.Drawing.Size(323, 59);
-            this.filePathTb.TabIndex = 3;
+            this.selectAllBtn.Location = new System.Drawing.Point(781, 378);
+            this.selectAllBtn.Name = "selectAllBtn";
+            this.selectAllBtn.Size = new System.Drawing.Size(199, 59);
+            this.selectAllBtn.TabIndex = 7;
+            this.selectAllBtn.Text = "Select All";
+            this.selectAllBtn.UseVisualStyleBackColor = true;
+            this.selectAllBtn.Click += new System.EventHandler(this.button1_Click_1);
+            // 
+            // clearSelectBtn
+            // 
+            this.clearSelectBtn.Location = new System.Drawing.Point(781, 476);
+            this.clearSelectBtn.Name = "clearSelectBtn";
+            this.clearSelectBtn.Size = new System.Drawing.Size(199, 59);
+            this.clearSelectBtn.TabIndex = 8;
+            this.clearSelectBtn.Text = "Clear Selection";
+            this.clearSelectBtn.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1956, 1450);
-            this.Controls.Add(this.filePathTb);
-            this.Controls.Add(this.addFileBtn);
+            this.ClientSize = new System.Drawing.Size(1345, 1450);
+            this.Controls.Add(this.clearSelectBtn);
+            this.Controls.Add(this.selectAllBtn);
+            this.Controls.Add(this.removeFilesBtn);
             this.Controls.Add(this.fileListBox);
+            this.Controls.Add(this.outputListBox);
             this.Controls.Add(this.browseFileBtn);
             this.Name = "Form1";
             this.Text = "Form1";
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -98,9 +121,11 @@
 
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.Button browseFileBtn;
-        private System.Windows.Forms.ListBox fileListBox;
-        private System.Windows.Forms.Button addFileBtn;
-        private System.Windows.Forms.TextBox filePathTb;
+        private System.Windows.Forms.ListBox outputListBox;
+        private System.Windows.Forms.CheckedListBox fileListBox;
+        private System.Windows.Forms.Button removeFilesBtn;
+        private System.Windows.Forms.Button selectAllBtn;
+        private System.Windows.Forms.Button clearSelectBtn;
     }
 }
 
