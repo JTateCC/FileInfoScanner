@@ -30,11 +30,17 @@
         {
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.browseFileBtn = new System.Windows.Forms.Button();
-            this.outputListBox = new System.Windows.Forms.ListBox();
             this.fileListBox = new System.Windows.Forms.CheckedListBox();
             this.removeFilesBtn = new System.Windows.Forms.Button();
             this.selectAllBtn = new System.Windows.Forms.Button();
             this.clearSelectBtn = new System.Windows.Forms.Button();
+            this.outputListView = new System.Windows.Forms.ListView();
+            this.idHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.fileNameHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.fileSizeHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.createdDateHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.modifiedDateHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.fileExtHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.SuspendLayout();
             // 
             // openFileDialog1
@@ -50,17 +56,6 @@
             this.browseFileBtn.Text = "Add File(s)";
             this.browseFileBtn.UseVisualStyleBackColor = true;
             this.browseFileBtn.Click += new System.EventHandler(this.browseFileBtn_Click);
-            // 
-            // outputListBox
-            // 
-            this.outputListBox.FormattingEnabled = true;
-            this.outputListBox.ItemHeight = 20;
-            this.outputListBox.Location = new System.Drawing.Point(42, 675);
-            this.outputListBox.MultiColumn = true;
-            this.outputListBox.Name = "outputListBox";
-            this.outputListBox.SelectionMode = System.Windows.Forms.SelectionMode.None;
-            this.outputListBox.Size = new System.Drawing.Size(1737, 444);
-            this.outputListBox.TabIndex = 4;
             // 
             // fileListBox
             // 
@@ -102,20 +97,73 @@
             this.clearSelectBtn.UseVisualStyleBackColor = true;
             this.clearSelectBtn.Click += new System.EventHandler(this.clearSelectBtn_Click);
             // 
+            // outputListView
+            // 
+            this.outputListView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.idHeader,
+            this.fileNameHeader,
+            this.fileExtHeader,
+            this.fileSizeHeader,
+            this.createdDateHeader,
+            this.modifiedDateHeader});
+            this.outputListView.HideSelection = false;
+            this.outputListView.Location = new System.Drawing.Point(42, 726);
+            this.outputListView.MaximumSize = new System.Drawing.Size(1500, 600);
+            this.outputListView.MinimumSize = new System.Drawing.Size(1150, 450);
+            this.outputListView.Name = "outputListView";
+            this.outputListView.Size = new System.Drawing.Size(1500, 450);
+            this.outputListView.TabIndex = 9;
+            this.outputListView.UseCompatibleStateImageBehavior = false;
+            this.outputListView.View = System.Windows.Forms.View.Details;
+            // 
+            // idHeader
+            // 
+            this.idHeader.Text = "ID";
+            this.idHeader.Width = 75;
+            // 
+            // fileNameHeader
+            // 
+            this.fileNameHeader.Text = "File Name";
+            this.fileNameHeader.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.fileNameHeader.Width = 300;
+            // 
+            // fileSizeHeader
+            // 
+            this.fileSizeHeader.Text = "Size (bytes)";
+            this.fileSizeHeader.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.fileSizeHeader.Width = 150;
+            // 
+            // createdDateHeader
+            // 
+            this.createdDateHeader.Text = "Date Created";
+            this.createdDateHeader.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.createdDateHeader.Width = 150;
+            // 
+            // modifiedDateHeader
+            // 
+            this.modifiedDateHeader.Text = "Last Modified";
+            this.modifiedDateHeader.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.modifiedDateHeader.Width = 150;
+            // 
+            // fileExtHeader
+            // 
+            this.fileExtHeader.Text = "Extension";
+            this.fileExtHeader.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.fileExtHeader.Width = 150;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1850, 1450);
+            this.Controls.Add(this.outputListView);
             this.Controls.Add(this.clearSelectBtn);
             this.Controls.Add(this.selectAllBtn);
             this.Controls.Add(this.removeFilesBtn);
             this.Controls.Add(this.fileListBox);
-            this.Controls.Add(this.outputListBox);
             this.Controls.Add(this.browseFileBtn);
             this.Name = "Form1";
             this.Text = "Form1";
-            this.Load += new System.EventHandler(this.Form1_Load);
             this.ResumeLayout(false);
 
         }
@@ -124,11 +172,17 @@
 
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.Button browseFileBtn;
-        private System.Windows.Forms.ListBox outputListBox;
         private System.Windows.Forms.CheckedListBox fileListBox;
         private System.Windows.Forms.Button removeFilesBtn;
         private System.Windows.Forms.Button selectAllBtn;
         private System.Windows.Forms.Button clearSelectBtn;
+        private System.Windows.Forms.ListView outputListView;
+        private System.Windows.Forms.ColumnHeader idHeader;
+        private System.Windows.Forms.ColumnHeader fileNameHeader;
+        private System.Windows.Forms.ColumnHeader fileSizeHeader;
+        private System.Windows.Forms.ColumnHeader createdDateHeader;
+        private System.Windows.Forms.ColumnHeader modifiedDateHeader;
+        private System.Windows.Forms.ColumnHeader fileExtHeader;
     }
 }
 

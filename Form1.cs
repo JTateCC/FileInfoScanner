@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Security.Cryptography; // learning abut this new module.
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -102,16 +103,21 @@ namespace FileInfoScanner
 
         // when checked the output list populates data
         private void fileListBox_ItemCheck(object sender, ItemCheckEventArgs e)
-        {
+        {   
             if (e.NewValue == CheckState.Checked)
             {
                 FileWithID checkedItem = fileList[e.Index];
-                outputListBox.Items.Add(checkedItem.formatOutputString());
+                ListViewItem item = new ListViewItem(checkedItem.ID);
+                item.SubItems.Add(checkedItem.formatFileNameString());
+                item.SubItems.Add(checkedItem.fileExt);
+                item.SubItems.Add(checkedItem.fileSize.ToString());
+                item.SubItems.Add(checkedItem.creationDate.ToString());
+                item.SubItems.Add(checkedItem.modifiedDate.ToString());
+                outputListView.Items.Add(item);
             }
             else if (e.NewValue == CheckState.Unchecked)
             {
-                FileWithID uncheckedItem = fileList[e.Index];
-                outputListBox.Items.Remove(uncheckedItem.formatOutputString());
+                outputListView.Items.RemoveAt(e.Index);
             }
         }
 
@@ -131,11 +137,9 @@ namespace FileInfoScanner
 
         }
 
-        private void Form1_Load(object sender, EventArgs e)
-        {
-            string header = $"{ "ID",-50} | { "Name",-150} | { "Size (bytes)",-30} | { "Date Created",-30} | { "Last Modified",-30}";
-            outputListBox.Items.Insert(0, header);
-        }
+
+
+
     }
 
     // keep an oop approach and havin a custom class for files with id;s
@@ -148,6 +152,8 @@ namespace FileInfoScanner
         // pertinent file data for capture and display.
 
         public string fileName { get; set; }
+
+        public string fileExt { get; set; }
         public long fileSize { get; set; }
         public DateTime creationDate { get; set; }
         public DateTime modifiedDate { get; set; }
@@ -169,8 +175,8 @@ namespace FileInfoScanner
         }
 
 
-        // researching best way to display the output in seperate clumns
-        public string formatOutputString()
+        // if filename too long then truncates it
+       public string formatFileNameString()
         {
             string fnameString = fileName;
             if (fileName.Length > 50)
@@ -179,7 +185,7 @@ namespace FileInfoScanner
             }
 
         
-          return $"{ID,-50} | {fnameString,-150} | {fileSize,-30} | {creationDate,-30} | {modifiedDate,-30}";
+          return fnameString;
         }
 
         // Generate a unique ID using te Guid module.
@@ -194,6 +200,8 @@ namespace FileInfoScanner
 
             // Capture file name
             fileName = fileInfo.Name;
+
+            fileExt = fileInfo.Extension;
 
             // Capture file size
             fileSize = fileInfo.Length;
