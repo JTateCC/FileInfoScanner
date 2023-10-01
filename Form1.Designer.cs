@@ -43,6 +43,7 @@
             this.exportCsvBtn = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.label1 = new System.Windows.Forms.Label();
+            this.fileCountLabel = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -179,11 +180,21 @@
             this.label1.TabIndex = 12;
             this.label1.Text = "WINDOWS FILE SCANNER";
             // 
+            // fileCountLabel
+            // 
+            this.fileCountLabel.AutoSize = true;
+            this.fileCountLabel.Location = new System.Drawing.Point(1417, 643);
+            this.fileCountLabel.Name = "fileCountLabel";
+            this.fileCountLabel.Size = new System.Drawing.Size(81, 20);
+            this.fileCountLabel.TabIndex = 13;
+            this.fileCountLabel.Text = "File Count";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1850, 1450);
+            this.Controls.Add(this.fileCountLabel);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.outputListView);
@@ -212,6 +223,7 @@
         private System.Windows.Forms.Button exportCsvBtn;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label fileCountLabel;
     }
 }
 

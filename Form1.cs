@@ -24,6 +24,7 @@ namespace FileInfoScanner
         public Form1()
         {
             InitializeComponent();
+            fileCountLabel.Text = $"Total Files: 0";
         }
 
         // moved outside of the class as better to check if a duplicate exists before creating the new object.
@@ -106,7 +107,7 @@ namespace FileInfoScanner
                     }
                 }
             }
-
+            updateFileCountLabel();
 
         }
 
@@ -143,7 +144,8 @@ namespace FileInfoScanner
 
 
 
-            }      
+            }
+            updateFileCountLabel();
         }
 
     
@@ -165,23 +167,31 @@ namespace FileInfoScanner
 
         }
 
+
+        // function to wrtie to cvsv. rewritten usng the classmap to improve headers.
         private void ExportToCsv(string saveFilePath, List<FileWithID> fileList)
         {
+            try { 
             using (var writer = new StreamWriter(saveFilePath))
             using (var csv = new CsvWriter(writer, new CsvConfiguration(CultureInfo.InvariantCulture)))
             {
-                csv.WriteRecords(fileList.Select(file => new
-                {
-                    ID = file.ID,
-                    Name = file.fileName,
-                    Size = file.fileSize.ToString(),
-                    Extension = file.fileExt,
-                    DateCreated = file.creationDate.ToString(),
-                    DateModified = file.modifiedDate.ToString()
-                }));
+                csv.Context.RegisterClassMap<FileWithIDMap>();
+                csv.WriteRecords(fileList);
+            }
+                MessageBox.Show($"CSV file exported successfully to {saveFilePath}.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                // Display an error message
+                MessageBox.Show($"Error exporting CSV file: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
+
+
+
+
+        // initiate function on btn click
         private void exportCsvBtn_Click(object sender, EventArgs e)
         {
             using (SaveFileDialog saveFileDialog = new SaveFileDialog())
@@ -193,6 +203,13 @@ namespace FileInfoScanner
                     ExportToCsv(saveFileDialog.FileName, selectedFiles);
                 }
             }
+        }
+
+
+        private void updateFileCountLabel()
+        {
+            int numFiles = fileList.Count;
+            fileCountLabel.Text = $"Total Files: {numFiles}";
         }
 
 
@@ -277,5 +294,19 @@ namespace FileInfoScanner
 
 
 
+    }
+
+    // this class allows the file with id to mpa proper column names when outputtng to csv
+    public sealed class FileWithIDMap : ClassMap<FileWithID>
+    {
+        public FileWithIDMap()
+        {
+            Map(m => m.ID).Name("ID"); 
+            Map(m => m.fileName).Name("File Name"); 
+            Map(m => m.fileSize).Name("File Size (bytes)");
+            Map(m => m.fileExt).Name("File Extension");
+            Map(m => m.creationDate).Name("Date Created");
+            Map(m => m.modifiedDate).Name("Date Modified");
+        }
     }
 }
