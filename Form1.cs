@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography; // learning abut this new module.
@@ -10,11 +11,14 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using CsvHelper;
+using CsvHelper.Configuration;
 
 namespace FileInfoScanner
 {
     public partial class Form1 : Form
     {
+
 
         private List<FileWithID> fileList = new List<FileWithID>();// useful to keep this list rather than working with the listbox.
         public Form1()
@@ -85,7 +89,14 @@ namespace FileInfoScanner
 
                             FileWithID newFile = new FileWithID(selectedFile, digitalSignature);
                             fileList.Add(newFile);
-                            fileListBox.Items.Add(newFile);
+                            ListViewItem item = new ListViewItem(newFile.ID);
+                            item.SubItems.Add(newFile.formatFileNameString());
+                            item.SubItems.Add(newFile.fileExt);
+                            item.SubItems.Add(newFile.fileSize.ToString());
+                            item.SubItems.Add(newFile.creationDate.ToString());
+                            item.SubItems.Add(newFile.modifiedDate.ToString());
+                            item.Tag = newFile;
+                            outputListView.Items.Add(item);
                         }
                         else
                         {
@@ -101,47 +112,91 @@ namespace FileInfoScanner
 
 
 
-        // when checked the output list populates data
-        private void fileListBox_ItemCheck(object sender, ItemCheckEventArgs e)
-        {   
-            if (e.NewValue == CheckState.Checked)
-            {
-                FileWithID checkedItem = fileList[e.Index];
-                ListViewItem item = new ListViewItem(checkedItem.ID);
-                item.SubItems.Add(checkedItem.formatFileNameString());
-                item.SubItems.Add(checkedItem.fileExt);
-                item.SubItems.Add(checkedItem.fileSize.ToString());
-                item.SubItems.Add(checkedItem.creationDate.ToString());
-                item.SubItems.Add(checkedItem.modifiedDate.ToString());
-                outputListView.Items.Add(item);
-            }
-            else if (e.NewValue == CheckState.Unchecked)
-            {
-                outputListView.Items.RemoveAt(e.Index);
-            }
-        }
+        
 
         // remove any selected files from the listbox and list
         private void removeFilesBtn_Click(object sender, EventArgs e)
         {
 
+
+            List<ListViewItem> itemsToRemove = new List<ListViewItem>();
+
+            // Iterate through the ListView items
+            foreach (ListViewItem item in outputListView.Items)
+            {
+                // Check if the item's checkbox is checked
+                if (item.Checked)
+                {
+                    // Add the checked item to the list
+                    itemsToRemove.Add(item);
+                    if (item.Tag is FileWithID fileToRemove)
+                    {
+                        fileList.Remove(fileToRemove); 
+                    }
+                }
+            }
+
+            // Remove the checked items from the ListView
+            foreach (ListViewItem itemToRemove in itemsToRemove)
+            {
+                outputListView.Items.Remove(itemToRemove);
+
+
+
+            }      
         }
 
+    
+        // simple loop to select all
         private void selectAllBtn_Click(object sender, EventArgs e)
         {
-
+            foreach (ListViewItem item in outputListView.Items)
+            {
+                item.Checked = true; // Set the checkbox of each item to checked
+            }
         }
 
         private void clearSelectBtn_Click(object sender, EventArgs e)
         {
+            foreach (ListViewItem item in outputListView.Items)
+            {
+                item.Checked = false; // Set the checkbox of each item to checked
+            }
 
         }
 
+        private void ExportToCsv(string saveFilePath, List<FileWithID> fileList)
+        {
+            using (var writer = new StreamWriter(saveFilePath))
+            using (var csv = new CsvWriter(writer, new CsvConfiguration(CultureInfo.InvariantCulture)))
+            {
+                csv.WriteRecords(fileList.Select(file => new
+                {
+                    ID = file.ID,
+                    Name = file.fileName,
+                    Size = file.fileSize.ToString(),
+                    Extension = file.fileExt,
+                    DateCreated = file.creationDate.ToString(),
+                    DateModified = file.modifiedDate.ToString()
+                }));
+            }
+        }
 
+        private void exportCsvBtn_Click(object sender, EventArgs e)
+        {
+            using (SaveFileDialog saveFileDialog = new SaveFileDialog())
+            {
+                saveFileDialog.Filter = "CSV Files|*.csv";
+                if (saveFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    var selectedFiles = fileList.ToList();
+                    ExportToCsv(saveFileDialog.FileName, selectedFiles);
+                }
+            }
+        }
 
 
     }
-
     // keep an oop approach and havin a custom class for files with id;s
     public class FileWithID
     {
@@ -158,6 +213,9 @@ namespace FileInfoScanner
         public DateTime creationDate { get; set; }
         public DateTime modifiedDate { get; set; }
 
+        public int inputIndex { get; set; }
+        public int outputIndex { get; set; }
+
         // public string author { get; set; } TODO: set this method up if time available.
 
 
@@ -171,7 +229,7 @@ namespace FileInfoScanner
 
         public override string ToString()
         {
-            return $"{filePath} (ID: {ID})";
+            return $"{filePath}";
         }
 
 
